@@ -10,6 +10,8 @@ curl --silent https://kata-config.oss-cn-beijing.aliyuncs.com/$USER_NAME.pem -o 
 
 chmod 600 /tmp/ssh.pem
 
-SSH_CMD=`cat /tmp/ssh.txt`
-
-ssh -i /tmp/ssh.pem $SSH_CMD
+SSH_OPTIONS=`cat /tmp/ssh.txt`
+KATAGO_BIN=/content/katago
+WEIGHT_FILE=/content/40b.bin.gz
+CONFIG_FILE=/content/katago-colab/config/gtp_500v.cfg
+ssh -i /tmp/ssh.pem $SSH_OPTIONS $KATAGO_BIN gtp -model $WEIGHT_FILE -config $CONFIG_FILE
