@@ -83,6 +83,8 @@ const (
 	KataGoWeightFile string = "/content/40b.bin.gz"
 	// KataGoConfigFile the default config file
 	KataGoConfigFile string = "/content/katago-colab/config/gtp_500v.cfg"
+	// KataGoChangeConfigScript changes the config
+	KataGoChangeConfigScript string = "/content/katago-colab/scripts/change_config.sh"
 )
 
 func main() {
@@ -93,6 +95,10 @@ func main() {
 	}
 	username := args[0]
 	userpassword := args[1]
+	var newConfig *string = nil
+	if len(args) >= 3 {
+		newConfig = &args[2]
+	}
 	log.Printf("INFO using user name: %s password: %s\n", username, userpassword)
 	sshJSONURL := "https://kata-config.oss-cn-beijing.aliyuncs.com/" + username + ".ssh.json"
 	response, err := DoHTTPRequest("GET", sshJSONURL, nil, nil)
@@ -125,17 +131,35 @@ func main() {
 	}
 	defer sshClient.Close()
 
+	configFile := KataGoConfigFile
+	if newConfig != nil {
+		// start the sesssion to do it
+		session, err := sshClient.NewSession()
+		if err != nil {
+			log.Fatal("failed to create ssh session", err)
+			return
+		}
+		defer session.Close()
+
+		cmd := fmt.Sprintf("%s %s", KataGoChangeConfigScript, *newConfig)
+		log.Printf("DEBUG running commad:%s\n", cmd)
+		configFile = fmt.Sprintf("/content/gtp_colab_%s.cfg", *newConfig)
+		session.Run(cmd)
+
+	}
+
 	session, err := sshClient.NewSession()
 	if err != nil {
 		log.Fatal("failed to create ssh session", err)
 		return
 	}
-	defer session.Close()
 
+	defer session.Close()
 	session.Stdout = os.Stdout
 	session.Stderr = os.Stderr
 	session.Stdin = os.Stdin
-	cmd := fmt.Sprintf("%s gtp -model %s -config %s", KataGoBin, KataGoWeightFile, KataGoConfigFile)
+
+	cmd := fmt.Sprintf("%s gtp -model %s -config %s", KataGoBin, KataGoWeightFile, configFile)
 	log.Printf("DEBUG running commad:%s\n", cmd)
 	session.Run(cmd)
 }
