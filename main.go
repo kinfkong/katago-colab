@@ -82,7 +82,7 @@ const (
 	// KataGoWeightFile the default weight file
 	KataGoWeightFile string = "/content/weight.bin.gz"
 	// KataGoConfigFile the default config file
-	KataGoConfigFile string = "/content/katago-colab/config/gtp_example.cfg"
+	KataGoConfigFile string = "/content/katago-colab/config/gtp_colab.cfg"
 	// KataGoChangeConfigScript changes the config
 	KataGoChangeConfigScript string = "/content/katago-colab/scripts/change_config.sh"
 )
