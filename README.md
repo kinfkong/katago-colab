@@ -1,9 +1,10 @@
 # colab-katago
-See how to use: 
-**English Version**
+See how to use:   
+
+**English Version**  
 https://colab.research.google.com/drive/1sKv4QHdB6P-fSNMIhZkaC5gti6qhHDeC?usp=sharing 
 
-**Chinese Version**
+**Chinese Version**  
 https://colab.research.google.com/drive/1NGGG4t59Atnq2c9uZPOgg28KsCOcQptA?usp=sharing
 
 # Build
